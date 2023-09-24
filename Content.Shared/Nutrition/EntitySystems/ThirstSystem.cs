@@ -26,9 +26,15 @@ public sealed class ThirstSystem : EntitySystem
 
         _sawmill = Logger.GetSawmill("thirst");
 
+        SubscribeLocalEvent<ThirstComponent, EntityUnpausedEvent>(OnUnpaused);
         SubscribeLocalEvent<ThirstComponent, RefreshMovementSpeedModifiersEvent>(OnRefreshMovespeed);
         SubscribeLocalEvent<ThirstComponent, ComponentStartup>(OnComponentStartup);
         SubscribeLocalEvent<ThirstComponent, RejuvenateEvent>(OnRejuvenate);
+    }
+
+    private void OnUnpaused(EntityUid uid, ThirstComponent component, ref EntityUnpausedEvent args)
+    {
+        component.NextUpdateTime += args.PausedTime;
     }
 
     private void OnComponentStartup(EntityUid uid, ThirstComponent component, ComponentStartup args)
